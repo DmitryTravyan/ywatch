@@ -1,0 +1,20 @@
+[package]
+name = "futures-test"
+version = "0.1.0"
+authors = ["dmitry.travyan <dmitry.travyan@megafon.ru>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+futures = { version = "0.3", default_features = false, features = ["async-await", "executor"] }
+tokio = { version = "1.6.1", features = ["full"] }
+reqwest = "0.11.3"
+async-std = "1.9.0"
+clap = "2.33.3"
+log = "0.4.14"
+env_logger = "0.8.3"
+serde = { version = "1.0.126", features = ["derive"] }
+serde_json = "1.0.64"
+hyper = { version = "0.14", features = ["full"] }
+chrono = "0.4.19"
