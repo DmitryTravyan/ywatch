@@ -1,10 +1,10 @@
 use crate::state::State;
-use hyper::http::{Request, Response};
+use hyper::http::{Request, Response, StatusCode};
 use hyper::Body;
-use reqwest::StatusCode;
+use std::sync::Arc;
 
 pub(crate) async fn status(
-    state: &State
+    state: Arc<State>
 ) -> super::Result<Response<Body>> {
     Ok(Response::builder()
         .status(StatusCode::OK)

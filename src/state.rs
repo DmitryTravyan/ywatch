@@ -1,3 +1,5 @@
+pub(crate) mod youtube;
+
 use std::time::{Instant, SystemTime};
 use chrono::{DateTime, Utc};
 use serde_json::{Value, Map};
@@ -20,11 +22,11 @@ impl State {
         serde_json::to_string_pretty(&[
             (
                 "start_time".to_string(),
-                &self.start_time.to_rfc2822()
+                String::from(&self.start_time.to_rfc2822())
             ),
             (
                 "uptime".to_string(),
-                &self.uptime.elapsed().as_secs_f32().to_string()
+                String::from(&self.uptime.elapsed().as_secs_f32().to_string())
             )
         ]
             .iter()

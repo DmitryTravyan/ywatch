@@ -1,24 +1,25 @@
 mod aggregator;
 mod status_svc;
 mod index_svc;
+mod youtube_svc;
 
 use crate::args::Configuration;
 use crate::state::State;
 use hyper::Server;
 use tokio::net::unix::SocketAddr;
 use hyper::service::{make_service_fn, service_fn};
+use async_std::sync::Arc;
 
 type GenericError = Box<dyn std::error::Error + Send + Sync>;
 type Result<T> = std::result::Result<T, GenericError>;
 
-pub(crate) async fn new_server(conf: &Configuration, state: &State) {
+pub(crate) async fn new_server(conf: &Configuration, state: Arc<State>) {
     let addr = format!("{}:{}", conf.ip(), conf.port()).parse().unwrap();
-
-    let state_ref = state.clone();
     let service = make_service_fn(move |_conn| {
+        let state_ref = state.clone();
         async {
-            Ok::<_, GenericError>(service_fn(|req| {
-                aggregator::api(req, state_ref.clone())
+            Ok::<_, GenericError>(service_fn(move |req| {
+                aggregator::api(req, state_ref.to_owned())
             }))
         }
     });
