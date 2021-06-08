@@ -5,17 +5,15 @@ use std::time::Duration;
 use async_std::sync::{Arc};
 use futures::lock::Mutex;
 use crate::state::youtube::Summary;
+use tokio::sync::mpsc::Sender;
 
-pub(crate) async fn new_client(youtube_state: Arc<Mutex<Summary>>) {
+pub(crate) async fn new_client(tx: Sender<u64>) {
     let uri: Uri = "http://google.com".parse().expect("Ok");
     let client = Client::new();
     loop {
-        {
-            let unlocked_counter = youtube_state.lock().await;
-            let mut resp = client.get(uri.clone()).await.expect("Nok");
-            unlocked_counter.count();
-            println!("Response {}", resp.status());
-        }
+        let mut resp = client.get(uri.clone()).await.expect("Nok");
+        tx.send(1).await.unwrap();
+        println!("Response {}", resp.status());
         sleep(Duration::from_secs(5)).await;
     }
 }
